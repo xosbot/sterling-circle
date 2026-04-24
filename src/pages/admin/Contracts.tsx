@@ -301,7 +301,7 @@ const FunctionRow = ({ fn, contract, mode, onAfter }: {
             functionName: fn.name,
             args: parsed,
             chainId: evm.id as any,
-          });
+          } as any);
           const s = stringifyResult(r);
           setResult(s);
           await log("success", { result: s });
