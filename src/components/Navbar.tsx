@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ConnectWalletButton } from "./ConnectWalletButton";
+import { useMembership } from "@/hooks/useMembership";
 
 const links = [
   { to: "/", label: "The Network" },
@@ -82,9 +84,10 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="hidden lg:block">
+          <div className="hidden lg:flex items-center gap-3">
+            <ConnectWalletButton compact />
             <Button asChild variant="emerald" size="sm">
-              <Link to="/apply">Apply for Whitelist <ArrowRight size={14} /></Link>
+              <Link to="/apply">Apply <ArrowRight size={14} /></Link>
             </Button>
           </div>
 
