@@ -1,10 +1,8 @@
-import { parseUnits, encodeFunctionData, erc20Abi, type Address } from "viem";
-import { sendTransaction, writeContract, waitForTransactionReceipt } from "wagmi/actions";
-import { wagmiConfig, USDC_ADDRESSES, USDC_DECIMALS, NATIVE_USD_PRICE_FALLBACK } from "@/lib/wagmi";
+import { parseUnits, erc20Abi, type Address } from "viem";
 import { getTronWeb, USDT_TRC20_ADDRESS, USDT_TRC20_DECIMALS, TRX_USD_PRICE_FALLBACK } from "@/lib/tron";
+import { USDC_ADDRESSES, USDC_DECIMALS, NATIVE_USD_PRICE_FALLBACK } from "@/lib/wagmi";
 
 export const PRIORITY_FEE_USD = 100;
-
 export type PaymentAsset = "native" | "stable";
 
 export const EVM_ADMIN_ADDRESS: Address = "0x51aB18d837b2898DC53B95A58F78Cf730E4e2C16";
@@ -12,77 +10,47 @@ export const TRON_ADMIN_ADDRESS = "TKbEYJHsibLa55dvKreFFyWVkBPNfTqf54";
 
 export interface PaymentResult {
   txHash: string;
-  asset: string; // "ETH", "USDC", "TRX", "USDT"
-  amountPaid: string; // human-readable
-  chain: string; // "ethereum", "base", "tron", etc.
+  asset: string;
+  amountPaid: string;
+  chain: string;
 }
 
-const CHAIN_NAMES: Record<number, string> = {
-  1: "ethereum",
-  8453: "base",
-  137: "polygon",
-  42161: "arbitrum",
-  10: "optimism",
-  56: "bsc",
+export const CHAIN_NAMES: Record<number, string> = {
+  1: "ethereum", 8453: "base", 137: "polygon",
+  42161: "arbitrum", 10: "optimism", 56: "bsc",
 };
 
-const NATIVE_SYMBOLS: Record<number, string> = {
-  1: "ETH",
-  8453: "ETH",
-  137: "MATIC",
-  42161: "ETH",
-  10: "ETH",
-  56: "BNB",
+export const NATIVE_SYMBOLS: Record<number, string> = {
+  1: "ETH", 8453: "ETH", 137: "MATIC", 42161: "ETH", 10: "ETH", 56: "BNB",
 };
 
-const NATIVE_DECIMALS: Record<number, number> = {
-  1: 18, 8453: 18, 137: 18, 42161: 18, 10: 18, 56: 18,
-};
+export const NATIVE_DECIMALS = 18;
 
-export async function payPriorityFeeEvm(
-  chainId: number,
-  asset: PaymentAsset,
-): Promise<PaymentResult> {
-  const cid = chainId as 1 | 10 | 56 | 137 | 8453 | 42161;
+/** Build the EVM transaction params for the priority fee. */
+export function buildEvmPriorityTx(chainId: number, asset: PaymentAsset) {
   if (asset === "stable") {
-    const usdc = USDC_ADDRESSES[cid];
+    const usdc = USDC_ADDRESSES[chainId];
     if (!usdc) throw new Error("USDC not configured for this chain");
-    const decimals = USDC_DECIMALS[cid];
+    const decimals = USDC_DECIMALS[chainId];
     const amount = parseUnits(PRIORITY_FEE_USD.toString(), decimals);
-
-    const hash = await writeContract(wagmiConfig, {
+    return {
+      kind: "erc20" as const,
       address: usdc,
       abi: erc20Abi,
-      functionName: "transfer",
-      args: [EVM_ADMIN_ADDRESS, amount],
-      chainId: cid,
-    });
-    await waitForTransactionReceipt(wagmiConfig, { hash, chainId: cid });
-    return {
-      txHash: hash,
-      asset: "USDC",
-      amountPaid: PRIORITY_FEE_USD.toString(),
-      chain: CHAIN_NAMES[cid] || `chain-${cid}`,
+      functionName: "transfer" as const,
+      args: [EVM_ADMIN_ADDRESS, amount] as const,
+      assetSymbol: "USDC",
+      humanAmount: PRIORITY_FEE_USD.toString(),
     };
   }
-
-  // Native
-  const price = NATIVE_USD_PRICE_FALLBACK[cid] ?? 1;
+  const price = NATIVE_USD_PRICE_FALLBACK[chainId] ?? 1;
   const native = PRIORITY_FEE_USD / price;
-  const decimals = NATIVE_DECIMALS[cid] ?? 18;
-  const value = parseUnits(native.toFixed(decimals), decimals);
-
-  const hash = await sendTransaction(wagmiConfig, {
-    to: EVM_ADMIN_ADDRESS,
-    value,
-    chainId: cid,
-  });
-  await waitForTransactionReceipt(wagmiConfig, { hash, chainId: cid });
   return {
-    txHash: hash,
-    asset: NATIVE_SYMBOLS[cid] || "NATIVE",
-    amountPaid: native.toFixed(6),
-    chain: CHAIN_NAMES[cid] || `chain-${cid}`,
+    kind: "native" as const,
+    to: EVM_ADMIN_ADDRESS,
+    value: parseUnits(native.toFixed(NATIVE_DECIMALS), NATIVE_DECIMALS),
+    assetSymbol: NATIVE_SYMBOLS[chainId] || "NATIVE",
+    humanAmount: native.toFixed(6),
   };
 }
 
@@ -96,17 +64,11 @@ export async function payPriorityFeeTron(asset: PaymentAsset): Promise<PaymentRe
     const contract = await tronWeb.contract().at(USDT_TRC20_ADDRESS);
     const amount = Math.round(PRIORITY_FEE_USD * 10 ** USDT_TRC20_DECIMALS);
     const tx = await contract.transfer(TRON_ADMIN_ADDRESS, amount).send();
-    return {
-      txHash: tx,
-      asset: "USDT",
-      amountPaid: PRIORITY_FEE_USD.toString(),
-      chain: "tron",
-    };
+    return { txHash: tx, asset: "USDT", amountPaid: PRIORITY_FEE_USD.toString(), chain: "tron" };
   }
 
-  // Native TRX
   const trxAmount = PRIORITY_FEE_USD / TRX_USD_PRICE_FALLBACK;
-  const sun = Math.round(trxAmount * 1_000_000); // 1 TRX = 1,000,000 SUN
+  const sun = Math.round(trxAmount * 1_000_000);
   const tx = await tronWeb.trx.sendTransaction(TRON_ADMIN_ADDRESS, sun);
   if (!tx?.result) throw new Error("TRON transfer failed");
   return {
