@@ -43,10 +43,11 @@ export async function payPriorityFeeEvm(
   chainId: number,
   asset: PaymentAsset,
 ): Promise<PaymentResult> {
+  const cid = chainId as 1 | 10 | 56 | 137 | 8453 | 42161;
   if (asset === "stable") {
-    const usdc = USDC_ADDRESSES[chainId];
+    const usdc = USDC_ADDRESSES[cid];
     if (!usdc) throw new Error("USDC not configured for this chain");
-    const decimals = USDC_DECIMALS[chainId];
+    const decimals = USDC_DECIMALS[cid];
     const amount = parseUnits(PRIORITY_FEE_USD.toString(), decimals);
 
     const hash = await writeContract(wagmiConfig, {
@@ -54,34 +55,34 @@ export async function payPriorityFeeEvm(
       abi: erc20Abi,
       functionName: "transfer",
       args: [EVM_ADMIN_ADDRESS, amount],
-      chainId,
+      chainId: cid,
     });
-    await waitForTransactionReceipt(wagmiConfig, { hash, chainId });
+    await waitForTransactionReceipt(wagmiConfig, { hash, chainId: cid });
     return {
       txHash: hash,
       asset: "USDC",
       amountPaid: PRIORITY_FEE_USD.toString(),
-      chain: CHAIN_NAMES[chainId] || `chain-${chainId}`,
+      chain: CHAIN_NAMES[cid] || `chain-${cid}`,
     };
   }
 
   // Native
-  const price = NATIVE_USD_PRICE_FALLBACK[chainId] ?? 1;
+  const price = NATIVE_USD_PRICE_FALLBACK[cid] ?? 1;
   const native = PRIORITY_FEE_USD / price;
-  const decimals = NATIVE_DECIMALS[chainId] ?? 18;
+  const decimals = NATIVE_DECIMALS[cid] ?? 18;
   const value = parseUnits(native.toFixed(decimals), decimals);
 
   const hash = await sendTransaction(wagmiConfig, {
     to: EVM_ADMIN_ADDRESS,
     value,
-    chainId,
+    chainId: cid,
   });
-  await waitForTransactionReceipt(wagmiConfig, { hash, chainId });
+  await waitForTransactionReceipt(wagmiConfig, { hash, chainId: cid });
   return {
     txHash: hash,
-    asset: NATIVE_SYMBOLS[chainId] || "NATIVE",
+    asset: NATIVE_SYMBOLS[cid] || "NATIVE",
     amountPaid: native.toFixed(6),
-    chain: CHAIN_NAMES[chainId] || `chain-${chainId}`,
+    chain: CHAIN_NAMES[cid] || `chain-${cid}`,
   };
 }
 
