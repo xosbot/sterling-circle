@@ -72,7 +72,7 @@ const Apply = () => {
               functionName: tx.functionName,
               args: tx.args as any,
               chainId: active.chainId as any,
-            });
+            } as any);
           } else {
             hash = await sendTransactionAsync({
               to: tx.to,

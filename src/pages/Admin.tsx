@@ -183,7 +183,7 @@ const Admin = () => {
             functionName: "transfer",
             args: [a.wallet_address as Address, parseUnits(pay.amount_paid, decimals)],
             chainId: cid as any,
-          });
+          } as any);
         } else {
           refundTx = await sendTransactionAsync({
             to: a.wallet_address as Address,
