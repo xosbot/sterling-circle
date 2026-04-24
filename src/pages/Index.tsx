@@ -81,8 +81,8 @@ const Index = () => {
               <span className="hairline" />
             </div>
             <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-8 text-balance animate-fade-up" style={{ animationDelay: "150ms" }}>
-              The private society for the
-              <span className="text-gradient-emerald italic"> sovereign holders</span> of digital wealth.
+              The Private Society for the<br />
+              <span className="text-gradient-emerald italic">Sovereign Holders</span> of Digital Wealth.
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed animate-fade-up" style={{ animationDelay: "300ms" }}>
               Noir/Vault is an invitation-only network for ultra-premium members.
