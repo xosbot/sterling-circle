@@ -43,11 +43,12 @@ const rows: Row[] = [
   { category: "Lifestyle", feature: "Family-office structuring", initiate: false, sovereign: false, noir: true },
 ];
 
-const tiers = [
+type Tier = { key: string; name: string; icon: typeof Gem; sub: string; featured?: boolean };
+const tiers: Tier[] = [
   { key: "initiate", name: "Initiate", icon: Gem, sub: "Verified · Whitelisted" },
   { key: "sovereign", name: "Sovereign", icon: Diamond, sub: "By Recommendation", featured: true },
   { key: "noir", name: "Noir", icon: Crown, sub: "By Invitation" },
-] as const;
+];
 
 const renderCell = (val: Cell, featured?: boolean) => {
   if (val === true) {
