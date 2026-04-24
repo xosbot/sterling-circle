@@ -10,6 +10,7 @@ import Features from "./pages/Features";
 import Card from "./pages/Card";
 import Wallet from "./pages/Wallet";
 import Apply from "./pages/Apply";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: "card", element: <Card /> },
       { path: "wallet", element: <Wallet /> },
       { path: "apply", element: <Apply /> },
+      { path: "admin", element: <Admin /> },
       { path: "*", element: <NotFound /> },
     ],
   },
