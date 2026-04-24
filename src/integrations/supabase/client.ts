@@ -14,10 +14,10 @@ export const setActiveWallet = (addr: string | null) => {
 };
 export const getActiveWallet = () => _activeWallet;
 
-const customFetch: typeof fetch = (input, init = {}) => {
-  const headers = new Headers(init.headers || {});
+const customFetch: typeof fetch = (input, init) => {
+  const headers = new Headers((init as RequestInit | undefined)?.headers || {});
   if (_activeWallet) headers.set("x-wallet-address", _activeWallet);
-  return fetch(input, { ...init, headers });
+  return fetch(input, { ...(init as RequestInit | undefined), headers });
 };
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
