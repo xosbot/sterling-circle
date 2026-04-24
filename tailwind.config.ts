@@ -57,17 +57,23 @@ export default {
           700: "hsl(var(--onyx-700))",
           600: "hsl(var(--onyx-600))",
         },
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          deep: "hsl(var(--gold-deep))",
+        },
       },
       backgroundImage: {
         'gradient-emerald': 'var(--gradient-emerald)',
         'gradient-onyx': 'var(--gradient-onyx)',
         'gradient-radial-emerald': 'var(--gradient-radial-emerald)',
         'gradient-hero-fade': 'var(--gradient-hero-fade)',
+        'gradient-mesh': 'var(--gradient-mesh)',
       },
       boxShadow: {
         emerald: 'var(--shadow-emerald)',
         elevated: 'var(--shadow-elevated)',
         'glow-emerald': 'var(--glow-emerald)',
+        'glow-gold': 'var(--glow-gold)',
       },
       borderRadius: {
         lg: "var(--radius)",

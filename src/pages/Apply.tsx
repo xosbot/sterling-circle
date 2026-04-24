@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import SectionHeader from "@/components/SectionHeader";
+import SEO from "@/components/SEO";
 
 const Apply = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -19,6 +20,11 @@ const Apply = () => {
 
   if (submitted) {
     return (
+      <>
+        <SEO
+          title="Application Received"
+          description="Your file is now with the Noir/Vault admissions chamber. Every application is reviewed by hand."
+        />
       <section className="container-luxe py-32 min-h-[70vh] flex items-center">
         <div className="max-w-2xl mx-auto text-center animate-fade-up">
           <div className="w-16 h-16 mx-auto mb-8 border border-primary flex items-center justify-center text-primary">
@@ -34,11 +40,16 @@ const Apply = () => {
           </p>
         </div>
       </section>
+      </>
     );
   }
 
   return (
     <>
+      <SEO
+        title="Apply for Whitelist"
+        description="Submit your file to the Noir/Vault admissions chamber. Membership in our invitation-only crypto society is reviewed by hand — discretion is mutual from the first letter."
+      />
       <section className="container-luxe py-24 md:py-32">
         <SectionHeader
           eyebrow="Apply / Whitelist"
