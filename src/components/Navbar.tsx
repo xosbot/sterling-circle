@@ -15,6 +15,7 @@ const links = [
 ];
 
 const Navbar = () => {
+  const { isAdmin } = useMembership();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useLocation();
