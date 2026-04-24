@@ -11,6 +11,7 @@ import Card from "./pages/Card";
 import Wallet from "./pages/Wallet";
 import Apply from "./pages/Apply";
 import Admin from "./pages/Admin";
+import AdminContracts from "./pages/admin/Contracts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       { path: "wallet", element: <Wallet /> },
       { path: "apply", element: <Apply /> },
       { path: "admin", element: <Admin /> },
+      { path: "admin/contracts", element: <AdminContracts /> },
       { path: "*", element: <NotFound /> },
     ],
   },
