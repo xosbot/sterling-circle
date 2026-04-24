@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ConnectWalletButton } from "./ConnectWalletButton";
+import { useMembership } from "@/hooks/useMembership";
 
 const links = [
   { to: "/", label: "The Network" },
@@ -13,6 +15,7 @@ const links = [
 ];
 
 const Navbar = () => {
+  const { isAdmin } = useMembership();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -80,11 +83,20 @@ const Navbar = () => {
                 )}
               </NavLink>
             ))}
+            {isAdmin && (
+              <NavLink to="/admin" className={({ isActive }) =>
+                cn("text-[11px] uppercase tracking-[0.25em] transition-colors py-1 border-b border-primary/40",
+                  isActive ? "text-primary" : "text-primary/70 hover:text-primary")
+              }>
+                Admin
+              </NavLink>
+            )}
           </div>
 
-          <div className="hidden lg:block">
+          <div className="hidden lg:flex items-center gap-3">
+            <ConnectWalletButton compact />
             <Button asChild variant="emerald" size="sm">
-              <Link to="/apply">Apply for Whitelist <ArrowRight size={14} /></Link>
+              <Link to="/apply">Apply <ArrowRight size={14} /></Link>
             </Button>
           </div>
 
