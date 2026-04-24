@@ -502,7 +502,7 @@ const DeployForm = ({ onDone }: { onDone: () => void }) => {
         // Wait for receipt to capture the deployed address
         const { waitForTransactionReceipt } = await import("wagmi/actions");
         const { wagmiConfig } = await import("@/lib/wagmi");
-        const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: txHash, chainId: evm.id as any });
+        const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: txHash as `0x${string}`, chainId: evm.id as any });
         if (!receipt.contractAddress) throw new Error("No contract address in receipt");
         address = receipt.contractAddress;
       }
@@ -599,7 +599,8 @@ const CallHistory = ({ calls, contracts }: { calls: CallRow[]; contracts: Contra
 
   return (
     <div className="space-y-2">
-      {calls.map((c) => {
+      {calls.map((call) => {
+        const c = call as any;
         const contract = c.contract_id ? byId[c.contract_id] : null;
         const explorer = c.tx_hash ? buildTxUrl(c.network, c.tx_hash) : null;
         return (
@@ -613,7 +614,7 @@ const CallHistory = ({ calls, contracts }: { calls: CallRow[]; contracts: Contra
               </span>
               <span className="px-2 py-0.5 border border-border text-[10px] uppercase tracking-[0.2em]">{c.kind}</span>
               <code className="font-mono text-primary">{c.function_name}</code>
-              <span className="text-muted-foreground">on {contract?.label || c.address.slice(0, 10) + "…"} · {c.network}</span>
+              <span className="text-muted-foreground">on {contract?.label || (c.address as string).slice(0, 10) + "…"} · {c.network}</span>
               <span className="text-muted-foreground ml-auto">{new Date(c.created_at).toLocaleString()}</span>
             </div>
             {c.arguments && Array.isArray(c.arguments) && c.arguments.length > 0 && (
