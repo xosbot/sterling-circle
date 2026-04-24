@@ -40,11 +40,16 @@ const Apply = () => {
           </p>
         </div>
       </section>
+      </>
     );
   }
 
   return (
     <>
+      <SEO
+        title="Apply for Whitelist"
+        description="Submit your file to the Noir/Vault admissions chamber. Membership in our invitation-only crypto society is reviewed by hand — discretion is mutual from the first letter."
+      />
       <section className="container-luxe py-24 md:py-32">
         <SectionHeader
           eyebrow="Apply / Whitelist"
