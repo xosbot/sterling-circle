@@ -101,6 +101,65 @@ export type Database = {
         }
         Relationships: []
       }
+      contract_calls: {
+        Row: {
+          address: string
+          arguments: Json | null
+          caller_wallet: string | null
+          chain_kind: Database["public"]["Enums"]["chain_kind"]
+          contract_id: string | null
+          created_at: string
+          error: string | null
+          function_name: string
+          id: string
+          kind: Database["public"]["Enums"]["contract_call_kind"]
+          network: string
+          result: Json | null
+          status: Database["public"]["Enums"]["contract_call_status"]
+          tx_hash: string | null
+        }
+        Insert: {
+          address: string
+          arguments?: Json | null
+          caller_wallet?: string | null
+          chain_kind: Database["public"]["Enums"]["chain_kind"]
+          contract_id?: string | null
+          created_at?: string
+          error?: string | null
+          function_name: string
+          id?: string
+          kind: Database["public"]["Enums"]["contract_call_kind"]
+          network: string
+          result?: Json | null
+          status?: Database["public"]["Enums"]["contract_call_status"]
+          tx_hash?: string | null
+        }
+        Update: {
+          address?: string
+          arguments?: Json | null
+          caller_wallet?: string | null
+          chain_kind?: Database["public"]["Enums"]["chain_kind"]
+          contract_id?: string | null
+          created_at?: string
+          error?: string | null
+          function_name?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["contract_call_kind"]
+          network?: string
+          result?: Json | null
+          status?: Database["public"]["Enums"]["contract_call_status"]
+          tx_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_calls_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "smart_contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       members: {
         Row: {
           active: boolean
@@ -294,6 +353,57 @@ export type Database = {
           },
         ]
       }
+      smart_contracts: {
+        Row: {
+          abi: Json
+          address: string
+          bytecode: string | null
+          chain_kind: Database["public"]["Enums"]["chain_kind"]
+          constructor_args: Json | null
+          created_at: string
+          deployed_by: string | null
+          deployment_tx: string | null
+          description: string | null
+          id: string
+          label: string
+          network: string
+          updated_at: string
+          verified: boolean
+        }
+        Insert: {
+          abi: Json
+          address: string
+          bytecode?: string | null
+          chain_kind: Database["public"]["Enums"]["chain_kind"]
+          constructor_args?: Json | null
+          created_at?: string
+          deployed_by?: string | null
+          deployment_tx?: string | null
+          description?: string | null
+          id?: string
+          label: string
+          network: string
+          updated_at?: string
+          verified?: boolean
+        }
+        Update: {
+          abi?: Json
+          address?: string
+          bytecode?: string | null
+          chain_kind?: Database["public"]["Enums"]["chain_kind"]
+          constructor_args?: Json | null
+          created_at?: string
+          deployed_by?: string | null
+          deployment_tx?: string | null
+          description?: string | null
+          id?: string
+          label?: string
+          network?: string
+          updated_at?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -305,6 +415,9 @@ export type Database = {
     }
     Enums: {
       application_status: "pending" | "approved" | "rejected"
+      chain_kind: "evm" | "tron"
+      contract_call_kind: "read" | "write" | "deploy"
+      contract_call_status: "pending" | "success" | "failed"
       holdings_range: "250k_1m" | "1m_10m" | "10m_100m" | "100m_plus"
       membership_tier: "initiate" | "sovereign" | "noir"
       order_kind: "obsidian_card" | "hardware_wallet"
@@ -445,6 +558,9 @@ export const Constants = {
   public: {
     Enums: {
       application_status: ["pending", "approved", "rejected"],
+      chain_kind: ["evm", "tron"],
+      contract_call_kind: ["read", "write", "deploy"],
+      contract_call_status: ["pending", "success", "failed"],
       holdings_range: ["250k_1m", "1m_10m", "10m_100m", "100m_plus"],
       membership_tier: ["initiate", "sovereign", "noir"],
       order_kind: ["obsidian_card", "hardware_wallet"],
