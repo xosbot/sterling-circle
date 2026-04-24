@@ -83,6 +83,14 @@ const Navbar = () => {
                 )}
               </NavLink>
             ))}
+            {isAdmin && (
+              <NavLink to="/admin" className={({ isActive }) =>
+                cn("text-[11px] uppercase tracking-[0.25em] transition-colors py-1 border-b border-primary/40",
+                  isActive ? "text-primary" : "text-primary/70 hover:text-primary")
+              }>
+                Admin
+              </NavLink>
+            )}
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
