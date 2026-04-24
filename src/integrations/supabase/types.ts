@@ -14,16 +14,309 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_wallets: {
+        Row: {
+          created_at: string
+          id: string
+          label: string | null
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      applications: {
+        Row: {
+          alias: string | null
+          created_at: string
+          email: string
+          endorser: string | null
+          full_name: string
+          holdings: Database["public"]["Enums"]["holdings_range"] | null
+          id: string
+          jurisdiction: string
+          note: string | null
+          priority: boolean
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["application_status"]
+          tier_of_interest:
+            | Database["public"]["Enums"]["membership_tier"]
+            | null
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          alias?: string | null
+          created_at?: string
+          email: string
+          endorser?: string | null
+          full_name: string
+          holdings?: Database["public"]["Enums"]["holdings_range"] | null
+          id?: string
+          jurisdiction: string
+          note?: string | null
+          priority?: boolean
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          tier_of_interest?:
+            | Database["public"]["Enums"]["membership_tier"]
+            | null
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          alias?: string | null
+          created_at?: string
+          email?: string
+          endorser?: string | null
+          full_name?: string
+          holdings?: Database["public"]["Enums"]["holdings_range"] | null
+          id?: string
+          jurisdiction?: string
+          note?: string | null
+          priority?: boolean
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          tier_of_interest?:
+            | Database["public"]["Enums"]["membership_tier"]
+            | null
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      members: {
+        Row: {
+          active: boolean
+          application_id: string | null
+          approved_at: string
+          approved_by: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          tier: Database["public"]["Enums"]["membership_tier"]
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          active?: boolean
+          application_id?: string | null
+          approved_at?: string
+          approved_by?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          tier?: Database["public"]["Enums"]["membership_tier"]
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          active?: boolean
+          application_id?: string | null
+          approved_at?: string
+          approved_by?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          tier?: Database["public"]["Enums"]["membership_tier"]
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "members_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          contact_email: string
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["order_kind"]
+          notes: string | null
+          shipping_address: string
+          shipping_city: string
+          shipping_country: string
+          shipping_name: string
+          shipping_postal_code: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          contact_email: string
+          created_at?: string
+          id?: string
+          kind: Database["public"]["Enums"]["order_kind"]
+          notes?: string | null
+          shipping_address: string
+          shipping_city: string
+          shipping_country: string
+          shipping_name: string
+          shipping_postal_code?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          contact_email?: string
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["order_kind"]
+          notes?: string | null
+          shipping_address?: string
+          shipping_city?: string
+          shipping_country?: string
+          shipping_name?: string
+          shipping_postal_code?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      otc_requests: {
+        Row: {
+          amount: number
+          asset: string
+          created_at: string
+          id: string
+          notes: string | null
+          price_per_unit: number | null
+          quote_currency: string
+          side: Database["public"]["Enums"]["otc_side"]
+          status: Database["public"]["Enums"]["otc_status"]
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          amount: number
+          asset: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          price_per_unit?: number | null
+          quote_currency?: string
+          side: Database["public"]["Enums"]["otc_side"]
+          status?: Database["public"]["Enums"]["otc_status"]
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          amount?: number
+          asset?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          price_per_unit?: number | null
+          quote_currency?: string
+          side?: Database["public"]["Enums"]["otc_side"]
+          status?: Database["public"]["Enums"]["otc_status"]
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      priority_payments: {
+        Row: {
+          amount_paid: number
+          amount_usd: number
+          application_id: string
+          asset: string
+          chain: string
+          created_at: string
+          id: string
+          refund_tx_hash: string | null
+          refunded_at: string | null
+          status: Database["public"]["Enums"]["priority_payment_status"]
+          tx_hash: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          amount_paid: number
+          amount_usd?: number
+          application_id: string
+          asset: string
+          chain?: string
+          created_at?: string
+          id?: string
+          refund_tx_hash?: string | null
+          refunded_at?: string | null
+          status?: Database["public"]["Enums"]["priority_payment_status"]
+          tx_hash: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          amount_paid?: number
+          amount_usd?: number
+          application_id?: string
+          asset?: string
+          chain?: string
+          created_at?: string
+          id?: string
+          refund_tx_hash?: string | null
+          refunded_at?: string | null
+          status?: Database["public"]["Enums"]["priority_payment_status"]
+          tx_hash?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "priority_payments_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_wallet: { Args: never; Returns: string }
+      is_admin_wallet: { Args: { _wallet: string }; Returns: boolean }
+      is_member_wallet: { Args: { _wallet: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      application_status: "pending" | "approved" | "rejected"
+      holdings_range: "250k_1m" | "1m_10m" | "10m_100m" | "100m_plus"
+      membership_tier: "initiate" | "sovereign" | "noir"
+      order_kind: "obsidian_card" | "hardware_wallet"
+      order_status:
+        | "pending"
+        | "processing"
+        | "shipped"
+        | "delivered"
+        | "cancelled"
+      otc_side: "buy" | "sell"
+      otc_status: "open" | "matched" | "closed" | "cancelled"
+      priority_payment_status: "paid" | "refunded" | "consumed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +443,21 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      application_status: ["pending", "approved", "rejected"],
+      holdings_range: ["250k_1m", "1m_10m", "10m_100m", "100m_plus"],
+      membership_tier: ["initiate", "sovereign", "noir"],
+      order_kind: ["obsidian_card", "hardware_wallet"],
+      order_status: [
+        "pending",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+      ],
+      otc_side: ["buy", "sell"],
+      otc_status: ["open", "matched", "closed", "cancelled"],
+      priority_payment_status: ["paid", "refunded", "consumed"],
+    },
   },
 } as const
