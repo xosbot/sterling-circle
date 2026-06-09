@@ -13,6 +13,16 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: (asset) => {
+          if (asset.name && asset.name.endsWith('.svg')) return 'assets/[name][extname]';
+          return 'assets/[name]-[hash][extname]';
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
